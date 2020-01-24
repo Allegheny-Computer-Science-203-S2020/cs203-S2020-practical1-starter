@@ -1,0 +1,55 @@
+---
+name: cmpsc-203-spring-2020-practical1
+break: true
+indent: 4
+---
+
+# --> check the source code for various characteristics
+# note that without an "--exact" the check is an "at least"
+termfrequency:
+        compute_tf_monolith.py:
+            ConfirmFileExists
+            CountMultipleLineComments --language Python --count 1
+            CountSingleLineComments --language Python --count 12
+            MatchFileFragment --fragment "TODO" --count 0 --exact
+            MatchFileFragment --fragment "for line in open" --count 1
+            MatchFileFragment --fragment "open(" --count 2
+            MatchFileFragment --fragment "print(" --count 1 --exact
+            MatchFileFragment --fragment "for c in line" --count 1
+            MatchFileFragment --fragment "for tf in word_freqs" --count 1
+            MatchFileFragment --fragment "word_freqs" --count 10
+
+checks:
+        check_compute_tf_monolith.py:
+            ConfirmFileExists
+            CountMultipleLineComments --language Python --count 1
+            CountSingleLineComments --language Python --count 10
+            MatchFileFragment --fragment "TODO" --count 0 --exact
+            MatchFileFragment --fragment "subprocess.run" --count 1
+            MatchFileFragment --fragment "not in decoded_stdout" --count 1
+            MatchFileFragment --fragment "live  -  2" --count 1
+            MatchFileFragment --fragment "mostly  -  2" --count 1
+            MatchFileFragment --fragment "sys.exit(exit_code)" --count 1
+
+# --> check the technical writing
+writing/reflection.md:
+    ConfirmFileExists
+    CountFileWords --count 600
+    CountMarkdownTags --tag "heading" --count 8 --exact
+    CountMarkdownTags --tag "code_block" --count 1 --exact
+    MatchFileFragment --fragment "Add Your Name Here" --count 0 --exact
+
+# --> check the number of commits beyond a threshold
+CountCommits --count 10
+
+# NOTE: These checks do not run correctly in Travis CI because it
+# ultimately involves too many nested invocations of pipenv
+
+# NOTE: These checks do run correctly on a local laptop
+
+# --> check that the program executes and produces 8 lines of output
+#
+# ExecuteCommand --command "pipenv run python termfrequency/compute_tf_monolith.py inputs/input.txt"
+# ExecuteCommand --command "pipenv run python checks/check_compute_tf_monolith.py"
+# CountCommandOutput --command "pipenv run python termfrequency/compute_tf_monolith.py inputs/input.txt" --count 8 --exact
+# CountCommandOutput --command "pipenv run python checks/check_compute_tf_monolith.py" --count 14 --exact
