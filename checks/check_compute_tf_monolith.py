@@ -21,7 +21,10 @@ if __name__ == "__main__":
     print("Decoded output of executed command: \n" + decoded_stdout)
     # check to see if the output contains the first line
     print("Checking each line of the output ...")
-    if "live  -  2" not in decoded_stdout:
+    # TODO: This following line of code has a bug in it
+    # NOTE: Think carefully about what the checker is intended to do
+    # and then fix the bug so that this first check works correctly!
+    if "live  -  2" in decoded_stdout:
         print(" - 'live  -  2' is not detected")
         exit_code = 1
     # TODO: All all of the required checks for the output's correctness
